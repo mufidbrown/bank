@@ -1,6 +1,7 @@
 package com.dbs.controller;
 
 import com.dbs.config.JwtUtil;
+import com.dbs.entity.User;
 import com.dbs.entity.UserProfile;
 import com.dbs.payload.UserAuthenticationRequest;
 import com.dbs.payload.UserRegistrationRequest;
@@ -11,7 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -85,4 +88,12 @@ public class UserController {
         UserProfile profile = userService.getUserProfileById(userId);
         return ResponseEntity.ok(profile);
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.getUserByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(user);
+    }
+
+
 }
