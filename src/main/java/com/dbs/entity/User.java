@@ -1,6 +1,7 @@
 package com.dbs.entity;
 
 import com.dbs.entity.Enum.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,5 +38,6 @@ public class User {
     private UserProfile userProfile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Account> accounts;
 }

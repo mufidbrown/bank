@@ -1,5 +1,6 @@
 package com.dbs.controller;
 
+import com.dbs.config.BaseResponse;
 import com.dbs.dto.LoginRequestDTO;
 import com.dbs.dto.RegisterRequestDTO;
 import com.dbs.entity.Enum.Roles;
@@ -7,6 +8,7 @@ import com.dbs.jwt.JwtResponse;
 import com.dbs.jwt.TokenRefreshRequest;
 import com.dbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,22 +30,45 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+//        userService.registerUser(registerRequestDTO.getUsername(), registerRequestDTO.getPassword(), registerRequestDTO.getEmail(), Roles.USER);
+//        return ResponseEntity.ok("User registered successfully");
+//    }
+
+
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        userService.registerUser(registerRequestDTO.getUsername(), registerRequestDTO.getPassword(), registerRequestDTO.getEmail(), Roles.USER);
-        return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<BaseResponse<String>> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        userService.registerUser(
+                registerRequestDTO.getUsername(),
+                registerRequestDTO.getPassword(),
+                registerRequestDTO.getEmail(),
+                Roles.USER
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(BaseResponse.ok("User registered successfully"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        String token = userService.login(loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
-        return ResponseEntity.ok(new JwtResponse(token));
+    public ResponseEntity<BaseResponse<JwtResponse>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        try {
+            String token = userService.login(loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
+            return ResponseEntity.ok(BaseResponse.ok("Login successful", new JwtResponse(token)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(BaseResponse.error("Failed to login: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestBody TokenRefreshRequest request) {
-        String newToken = userService.refresh(request.getOldToken());
-        return ResponseEntity.ok(new JwtResponse(newToken));
+    public ResponseEntity<BaseResponse<JwtResponse>> refresh(@RequestBody TokenRefreshRequest request) {
+        try {
+            String newToken = userService.refresh(request.getOldToken());
+            return ResponseEntity.ok(BaseResponse.ok("Token refreshed successfully", new JwtResponse(newToken)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(BaseResponse.error("Failed to refresh token: " + e.getMessage()));
+        }
     }
 
 //    @PostMapping("/authenticate")
