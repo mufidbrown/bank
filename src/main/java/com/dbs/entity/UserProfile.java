@@ -3,8 +3,6 @@ package com.dbs.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Getter
@@ -18,11 +16,15 @@ public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    private String username;
-    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Account> accounts = new HashSet<>();
+
+    private String fullName;
+    private String address;
+    private String phoneNumber;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user; // Relasi dengan User
 
 
 

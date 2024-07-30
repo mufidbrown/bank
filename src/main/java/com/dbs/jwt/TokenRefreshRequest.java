@@ -1,4 +1,4 @@
-package com.dbs.payload;
+package com.dbs.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserAuthenticationRequest {
+public class TokenRefreshRequest {
 
-    private String username;
-    private String password;
+    private String oldToken;
 
 }

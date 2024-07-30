@@ -1,92 +1,103 @@
 package com.dbs.service;
 
-import com.dbs.entity.Account;
-import com.dbs.entity.Enum.Role;
+import com.dbs.config.JwtUtil;
+import com.dbs.entity.Enum.Roles;
 import com.dbs.entity.User;
-import com.dbs.entity.UserProfile;
-import com.dbs.payload.UserRegistrationRequest;
 import com.dbs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 @Service
-public class UserService implements UserDetailsService {
-
-
-
-    private final PasswordEncoder passwordEncoder;
+public class UserService  {
 
     @Autowired
-    public UserService(@Lazy PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    public UserService(PasswordEncoder passwordEncoder) {
-//        this.passwordEncoder = passwordEncoder;
-//    }
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public void registerUser(UserRegistrationRequest request) {
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+
+
+    public User registerUser(String username, String password, String email, Roles roles) {
+        if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Username or Email already exists");
+        }
+
         User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(new HashSet<>());
-        user.getRoles().add(Role.USER);
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setRoles(roles);
 
-        Account account = new Account();
-        account.setAccountNumber(generateAccountNumber());
-        account.setBalance(BigDecimal.ZERO);
-        user.getAccounts().add(account);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    private String generateAccountNumber() {
-        // Implement logic to generate a unique account number
-        return "1234567890";
+    public String login(String username, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return jwtUtil.generateToken(userDetails);
     }
 
-    public UserProfile getUserProfileById(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        UserProfile profile = new UserProfile();
-        profile.setId(user.getId());
-        profile.setUsername(user.getUsername());
-        profile.setAccounts(user.getAccounts());
-        return profile;
+    public String refresh(String oldToken) {
+        String username = jwtUtil.extractUsername(oldToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return jwtUtil.generateToken(userDetails);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//    private String generateAccountNumber() {
+//        // Implement logic to generate a unique account number
+//        return "1234567890";
+//    }
 
-        Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .collect(Collectors.toList());
+//    public UserProfile getUserProfileById(Long userId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//        UserProfile profile = new UserProfile();
+//        profile.setId(user.getId());
+//        profile.setUsername(user.getUsername());
+//        profile.setAccounts(user.getAccounts());
+//        return profile;
+//    }
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), authorities);
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+//                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+//                .collect(Collectors.toList());
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), user.getPassword(), authorities);
+//    }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+//    public User getUserByUsername(String username) {
+//        return userRepository.findByUsername(username).orElse(null);
+//    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
