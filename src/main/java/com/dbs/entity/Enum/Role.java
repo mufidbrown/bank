@@ -1,7 +1,13 @@
 package com.dbs.entity.Enum;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
 
-    USER, ADMIN
+public enum Role  implements GrantedAuthority {
+    USER, ADMIN;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + name();
+    }
 
 }
