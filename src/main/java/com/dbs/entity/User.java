@@ -26,6 +26,9 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Account> accounts = new HashSet<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<Account> accounts;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Account> accounts;
 }

@@ -5,9 +5,9 @@ import com.dbs.entity.Enum.Role;
 import com.dbs.entity.User;
 import com.dbs.entity.UserProfile;
 import com.dbs.payload.UserRegistrationRequest;
-import com.dbs.repository.AccountRepository;
 import com.dbs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,16 +21,27 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+
 @Service
 public class UserService implements UserDetailsService {
+
+
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(@Lazy PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+//    @Autowired
+//    public UserService(PasswordEncoder passwordEncoder) {
+//        this.passwordEncoder = passwordEncoder;
+//    }
+
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public void registerUser(UserRegistrationRequest request) {
@@ -43,8 +54,6 @@ public class UserService implements UserDetailsService {
         Account account = new Account();
         account.setAccountNumber(generateAccountNumber());
         account.setBalance(BigDecimal.ZERO);
-        account.setUser(user);
-
         user.getAccounts().add(account);
         userRepository.save(user);
     }

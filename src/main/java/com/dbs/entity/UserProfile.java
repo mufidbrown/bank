@@ -21,11 +21,14 @@ public class UserProfile {
 
     private Long id;
     private String username;
-//    private Set<Account> accounts;
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Account> accounts = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role")
-    private Set<String> roles = new HashSet<>();
+
 
 }
+
+//    @ElementCollection
+//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+//    @Column(name = "role")
+//    private Set<String> roles = new HashSet<>();
