@@ -1,12 +1,12 @@
 package com.dbs.entity;
 
-import com.dbs.entity.Enum.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,10 +31,11 @@ public class User {
     @Email
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Roles roles; // Relasi dengan EnumRoles
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private UserProfile userProfile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

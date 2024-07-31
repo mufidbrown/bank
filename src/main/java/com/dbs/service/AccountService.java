@@ -38,22 +38,7 @@ public class AccountService {
         return UUID.randomUUID().toString();
     }
 
-    //    public Account createAccount(String accountHolderName) {
-//        Account account = new Account();
-//        account.setAccountHolderName(accountHolderName);
-//        account.setAccountNumber(generateAccountNumber());
-//        return accountRepository.save(account);
-//    }
 
 
-//    private String generateAccountNumber() {
-//        // Contoh sederhana: nomor rekening 10 digit
-//        Random random = new Random();
-//        StringBuilder accountNumber = new StringBuilder();
-//        for (int i = 0; i < 10; i++) {
-//            accountNumber.append(random.nextInt(10));
-//        }
-//        return accountNumber.toString();
-//    }
 
 }

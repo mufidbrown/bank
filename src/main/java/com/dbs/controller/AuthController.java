@@ -3,7 +3,7 @@ package com.dbs.controller;
 import com.dbs.config.BaseResponse;
 import com.dbs.dto.LoginRequestDTO;
 import com.dbs.dto.RegisterRequestDTO;
-import com.dbs.entity.Enum.Roles;
+import com.dbs.entity.User;
 import com.dbs.jwt.JwtResponse;
 import com.dbs.jwt.TokenRefreshRequest;
 import com.dbs.service.UserService;
@@ -38,15 +38,10 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<BaseResponse<String>> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        userService.registerUser(
-                registerRequestDTO.getUsername(),
-                registerRequestDTO.getPassword(),
-                registerRequestDTO.getEmail(),
-                Roles.USER
-        );
+    public ResponseEntity<BaseResponse<User>> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        User user = userService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.ok("User registered successfully"));
+                .body(BaseResponse.ok("User registered successfully", user));
     }
 
     @PostMapping("/login")
