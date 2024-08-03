@@ -31,7 +31,7 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user; // Relasi dengan User
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TransactionLog> transactionLogs;
 
 

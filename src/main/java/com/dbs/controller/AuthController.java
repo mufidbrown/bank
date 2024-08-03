@@ -17,11 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-//import com.dbs.service.UserService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -29,12 +25,6 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
-//        userService.registerUser(registerRequestDTO.getUsername(), registerRequestDTO.getPassword(), registerRequestDTO.getEmail(), Roles.USER);
-//        return ResponseEntity.ok("User registered successfully");
-//    }
 
 
     @PostMapping("/register")
@@ -66,6 +56,22 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok("Logout berhasil");
+    }
+
+}
+
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+//        userService.registerUser(registerRequestDTO.getUsername(), registerRequestDTO.getPassword(), registerRequestDTO.getEmail(), Roles.USER);
+//        return ResponseEntity.ok("User registered successfully");
+//    }
+
+
+
 //    @PostMapping("/authenticate")
 //    public ResponseEntity<String> authenticateUser(@RequestBody UserAuthenticationRequest request) {
 //        try {
@@ -82,14 +88,3 @@ public class AuthController {
 //            return ResponseEntity.status(401).body("Authentication failed");
 //        }
 //    }
-
-
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser() {
-        SecurityContextHolder.clearContext();
-        return ResponseEntity.ok("Logout berhasil");
-    }
-
-
-}
