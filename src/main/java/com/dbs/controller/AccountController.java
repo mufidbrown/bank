@@ -31,27 +31,17 @@ public class AccountController {
     }
 
 
-//    @PostMapping("/create")
-//    public ResponseEntity<BaseResponse<Account>> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-//        try {
-//            Account account = accountService.createAccount(accountRequestDTO);
-//            return ResponseEntity.status(HttpStatus.CREATED)
-//                    .body(BaseResponse.ok(HttpStatus.CREATED.value(), "Account created successfully", account));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(BaseResponse.error(HttpStatus.BAD_REQUEST.value(), "Failed to create account: " + e.getMessage()));
-//        }
-//    }
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<BaseResponse<Account>> getAccount(@PathVariable String accountNumber) {
+        try {
+            Account account = accountService.getAccountByNumber(accountNumber);
+            return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.value(), "Account retrieved successfully", account));
+        } catch (AccountNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(BaseResponse.error(HttpStatus.NOT_FOUND.value(), "Account not found: " + e.getMessage()));
+        }
+    }
 
-//    @GetMapping("/{accountNumber}")
-//    public ResponseEntity<Account> getAccountByNumber(@PathVariable String accountNumber) {
-//        try {
-//            Account account = accountService.getAccountByNumber(accountNumber);
-//            return new ResponseEntity<>(account, HttpStatus.OK);
-//        } catch (AccountNotFoundException e) {
-//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     @PostMapping("/transfer")
     public ResponseEntity<String> transferFunds(@RequestBody TransferRequestDTO transferRequestDTO) {
@@ -76,59 +66,5 @@ public class AccountController {
     }
 
 
-//
-//    // Endpoint untuk mendapatkan akun berdasarkan nomor rekening
-//    @GetMapping("/{accountNumber}")
-//    public ResponseEntity<Account> getAccountByNumber(@PathVariable String accountNumber) {
-//        try {
-//            Account account = accountService.getAccountByNumber(accountNumber);
-//            return new ResponseEntity<>(account, HttpStatus.OK);
-//        } catch (AccountNotFoundException e) {
-//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-
-//
-//    @PostMapping("/create")
-//    public ResponseEntity<BaseResponse<Account>> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-//        try {
-//            Account account = accountService.createAccount(accountRequestDTO);
-//            return ResponseEntity.status(HttpStatus.CREATED)
-//                    .body(BaseResponse.ok(HttpStatus.CREATED.value(), "Account created successfully", account));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(BaseResponse.error(HttpStatus.BAD_REQUEST.value(), "Failed to create account: " + e.getMessage()));
-//        }
-//    }
-
-
-//    @GetMapping("/{accountNumber}")
-//    public ResponseEntity<Account> getAccountByNumber(@PathVariable String accountNumber) {
-//        Account account = accountService.getAccountByNumber(accountNumber);
-//        if (account != null) {
-//            return ResponseEntity.ok(account);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
-
-
-//    @PostMapping("/transfer")
-//    public ResponseEntity<String> transferFunds(@RequestBody TransferRequestDTO transferRequestDTO) {
-//        String fromAccountNumber = transferRequestDTO.getFromAccountNumber();
-//        String toAccountNumber = transferRequestDTO.getToAccountNumber();
-//        BigDecimal amount = transferRequestDTO.getAmount();
-//
-//        // Implementasi logika transfer dana
-//        boolean success = accountService.transferFunds(fromAccountNumber, toAccountNumber, amount);
-//
-//        if (success) {
-//            return ResponseEntity.ok("Transfer successful");
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer failed");
-//        }
-//    }
 }
 

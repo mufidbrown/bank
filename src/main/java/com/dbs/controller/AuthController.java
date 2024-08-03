@@ -85,31 +85,11 @@ public class AuthController {
 
 
 
-//    @PostMapping("/refresh-token")
-//    public ResponseEntity<String> refreshToken(@RequestHeader("Authorization") String token) {
-//        String refreshedToken = jwtUtil.refreshToken(token.substring(7));
-//        return ResponseEntity.ok(refreshedToken);
-//    }
-
-
-
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok("Logout berhasil");
     }
-
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<UserProfile> getUserProfile(@PathVariable Long userId) {
-//        UserProfile profile = userService.getUserProfileById(userId);
-//        return ResponseEntity.ok(profile);
-//    }
-//
-//    @GetMapping("/profile")
-//    public ResponseEntity<User> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
-//        User user = userService.getUserByUsername(userDetails.getUsername());
-//        return ResponseEntity.ok(user);
-//    }
 
 
 }

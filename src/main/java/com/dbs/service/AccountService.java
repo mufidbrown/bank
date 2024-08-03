@@ -18,7 +18,6 @@ import java.util.Random;
 @Service
 public class AccountService {
 
-
     private static final int ACCOUNT_NUMBER_LENGTH = 10;
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
@@ -60,42 +59,13 @@ public class AccountService {
         return accountNumber.toString();
     }
 
-
-//    public Account createAccount(String accountHolderName, BigDecimal initialBalance, Long userId) {
-//        if (initialBalance.compareTo(BigDecimal.ZERO) < 0) {
-//            throw new IllegalArgumentException("Initial balance cannot be negative");
-//        }
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Account account = new Account();
-//        account.setAccountNumber(generateAccountNumber());
-//        account.setAccountHolderName(accountHolderName);
-//        account.setBalance(initialBalance); // Set initial balance
-//        account.setUser(user);
-//
-//        logger.info("Creating account: {}", account);
-//
-//        return accountRepository.save(account);
-//    }
-//
-//    private String generateAccountNumber() {
-//        StringBuilder accountNumber = new StringBuilder(ACCOUNT_NUMBER_LENGTH);
-//        Random random = new Random();
-//        for (int i = 0; i < ACCOUNT_NUMBER_LENGTH; i++) {
-//            accountNumber.append(random.nextInt(10)); // Generate random digit (0-9)
-//        }
-//        return accountNumber.toString();
-//    }
-//
-//    public Account getAccountByNumber(String accountNumber) {
-//        Account account = accountRepository.findByAccountNumber(accountNumber);
-//        if (account == null) {
-//            throw new AccountNotFoundException("Account not found");
-//        }
-//        return account;
-//    }
+    public Account getAccountByNumber(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null) {
+            throw new AccountNotFoundException("Account not found");
+        }
+        return account;
+    }
 
     public boolean transferFunds(String fromAccountNumber, String toAccountNumber, BigDecimal amount) {
         Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber);
@@ -127,73 +97,6 @@ public class AccountService {
         return true;
     }
 }
-
-
-
-//
-//    // Method untuk membuat akun baru dengan saldo
-//    public Account createAccount(String accountHolderName, BigDecimal initialBalance) {
-//        if (initialBalance.compareTo(BigDecimal.ZERO) < 0) {
-//            throw new IllegalArgumentException("Initial balance cannot be negative");
-//        }
-//
-//        String accountNumber = generateAccountNumber(); // Menghasilkan nomor rekening baru
-//        Account account = new Account();
-//        account.setAccountNumber(accountNumber);
-//        account.setAccountHolderName(accountHolderName);
-//        account.setBalance(initialBalance); // Atur saldo awal
-//
-//        return accountRepository.save(account);
-//    }
-//
-//    // Method untuk mendapatkan akun berdasarkan nomor rekening
-//    public Account getAccountByNumber(String accountNumber) {
-//        Account account = accountRepository.findByAccountNumber(accountNumber);
-//        if (account == null) {
-//            throw new AccountNotFoundException("Account not found");
-//        }
-//        return account;
-//    }
-//
-//    // Method untuk menghasilkan nomor rekening acak
-//    private String generateAccountNumber() {
-//        StringBuilder accountNumber = new StringBuilder(ACCOUNT_NUMBER_LENGTH);
-//        Random random = new Random();
-//        for (int i = 0; i < ACCOUNT_NUMBER_LENGTH; i++) {
-//            accountNumber.append(random.nextInt(10)); // Menambahkan angka acak (0-9)
-//        }
-//        return accountNumber.toString();
-//    }
-//
-//    public boolean transferFunds(String fromAccountNumber, String toAccountNumber, BigDecimal amount) {
-//        Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber);
-//        Account toAccount = accountRepository.findByAccountNumber(toAccountNumber);
-//
-//        if (fromAccount == null || toAccount == null) {
-//            throw new IllegalArgumentException("One or both accounts not found");
-//        }
-//
-//        if (fromAccount.getBalance() == null || toAccount.getBalance() == null) {
-//            throw new IllegalStateException("Account balance is missing");
-//        }
-//
-//        if (fromAccount.getBalance().compareTo(amount) < 0) {
-//            throw new IllegalArgumentException("Insufficient funds");
-//        }
-//
-//        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
-//        toAccount.setBalance(toAccount.getBalance().add(amount));
-//
-//        accountRepository.save(fromAccount);
-//        accountRepository.save(toAccount);
-//
-//        // Log the transaction
-//        transactionService.logTransaction(fromAccountNumber, toAccountNumber, amount);
-//
-//        return true;
-//    }
-
-
 
 /*
     ini yg asli
@@ -277,4 +180,3 @@ public class AccountService {
 //
 //        return true;
 //    }
-
