@@ -3,7 +3,8 @@ package com.dbs.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -17,11 +18,13 @@ public class TransactionLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+//    private double amount;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+    private BigDecimal amount;
 
-    private double amount;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date transactionDate;
+    @Column(nullable = false)
+    private Timestamp transactionDate;
 
     @ManyToOne
     @JoinColumn(name = "account_id")

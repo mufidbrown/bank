@@ -3,6 +3,8 @@ package com.dbs.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Getter
@@ -20,6 +22,9 @@ public class Account {
 
     private String accountNumber;
     private String accountHolderName;
+//    private String balance;
+    @NotNull
+    private BigDecimal balance = BigDecimal.ZERO;
 
 
     @ManyToOne
