@@ -1,41 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
     <h2>Create Account</h2>
-    <form th:action="@{/register}" th:object="${RegisterRequestDTO}" method="post">
+    <form action="#" th:action="@{/web/create-account}" th:object="${accountDTO}" method="post">
         <div class="form-group">
-            <label for="accountHolderName">Account Holder Name</label>
-            <input type="text" class="form-control" id="accountHolderName" th:field="*{accountHolderName}" placeholder="Enter account holder name" required>
+            <label for="accountHolderName">Account Holder Name:</label>
+            <input type="text" id="accountHolderName" class="form-control" th:field="${accountDTO.accountHolderName}" required>
         </div>
         <div class="form-group">
-            <label for="initialBalance">Initial Balance</label>
-            <input type="number" class="form-control" id="initialBalance" th:field="*{initialBalance}" placeholder="Enter initial balance" required>
+            <label for="initialBalance">Initial Balance:</label>
+            <input type="number" id="initialBalance" class="form-control" th:field="${accountDTO.initialBalance}" step="0.01" required>
         </div>
         <div class="form-group">
-            <label for="userId">User ID</label>
-            <input type="text" class="form-control" id="userId" th:field="*{userId}" placeholder="Enter user ID" required>
+            <label for="userId">User ID:</label>
+            <input type="number" id="userId" class="form-control" th:field="${accountDTO.userId}" required>
         </div>
         <button type="submit" class="btn btn-primary">Create Account</button>
     </form>
 
-    <div th:if="${message}" class="mt-3">
-        <div th:class="${message.contains('successfully') ? 'alert alert-success' : 'alert alert-danger'}" role="alert">
-            <span th:text="${message}"></span>
-        </div>
-    </div>
-
-    <div th:if="${account}" class="mt-3">
-        <h4>Account Details</h4>
-        <p><strong>Account Number:</strong> <span th:text="${account.accountNumber}"></span></p>
-        <p><strong>Account Holder Name:</strong> <span th:text="${account.accountHolderName}"></span></p>
-        <p><strong>Balance:</strong> <span th:text="${account.balance}"></span></p>
-    </div>
+    <div th:if="${message}" class="alert alert-success mt-3" role="alert" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger mt-3" role="alert" th:text="${error}"></div>
 </div>
 </body>
 </html>

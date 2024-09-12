@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refresh Token</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Refresh Token</h2>
+    <form action="#" th:action="@{/auth/refresh}" th:object="${tokenRefreshRequest}" method="post">
+        <div class="form-group">
+            <label for="oldToken">Old Token:</label>
+            <input type="text" id="oldToken" class="form-control" th:field="*{oldToken}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Refresh Token</button>
+    </form>
+</div>
+</body>
+</html>
